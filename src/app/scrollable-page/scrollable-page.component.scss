@@ -1,0 +1,24 @@
+/* Ana sayfa kısmını tam ekran yapıyoruz */
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+.scroll-container {
+  height: 100vh; /* viewport yüksekliği kadar */
+  overflow-y: scroll; /* Dikey kaydırma özelliği */
+}
+
+.scroll-content {
+  height: 150%; /* İçeriği fazla uzun yaparak kaydırma alanı oluşturuyoruz */
+  padding: 20px;
+  background-color: #f4f4f4;
+}
+
+section {
+  margin: 20px 0;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}

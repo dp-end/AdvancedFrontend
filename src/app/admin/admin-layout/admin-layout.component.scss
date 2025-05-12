@@ -1,0 +1,120 @@
+// Genel admin layout konteyneri
+.admin-layout-container {
+  display: flex;
+  min-height: 100vh; // En az tam ekran yüksekliği
+  background-color: #1a1a1a; // Ana koyu arka plan
+}
+
+// Kenar Menüsü (Sidebar)
+.admin-sidebar {
+  width: 240px; // Sabit kenar menüsü genişliği
+  background-color: #343a40; // Sidebar arka planı (kartlarla aynı)
+  padding: 25px 15px;
+  color: #f8f9fa; // Açık metin rengi
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0; // Kenar menüsünün daralmasını engelle
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3); // Hafif sağ gölge
+  position: fixed; // Sabit kalabilir veya normal akışta olabilir
+  height: 100%; // Tam yükseklik
+  z-index: 1010; // Navbar'ın üzerinde olabilir
+
+  h2 {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 30px;
+    font-size: 1.6rem;
+    color: #f4a261; // Vurgu rengi
+    border-bottom: 1px solid #495057;
+    padding-bottom: 15px;
+  }
+
+  nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  nav li {
+    margin-bottom: 8px;
+  }
+
+  nav a {
+    display: block;
+    padding: 10px 15px;
+    color: #ced4da; // Normal link rengi
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    font-weight: 500;
+    font-size: 0.95rem;
+
+    &:hover {
+      background-color: #495057; // Hover arka planı
+      color: #ffffff; // Hover metin rengi
+    }
+
+    // Aktif link stili (routerLinkActive="active-link" ile eşleşir)
+    &.active-link {
+      background-color: #f4a261; // Vurgu rengi arka plan
+      color: #1a1a1a; // Koyu metin rengi
+      font-weight: 600;
+    }
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid #495057;
+    margin: 15px 0;
+  }
+
+  // Çıkış Yap linki için özel stil (opsiyonel)
+  nav a[href="javascript:void(0)"] {
+    color: #dc3545; // Kırmızı tonu
+    &:hover {
+      background-color: rgba(220, 53, 69, 0.1);
+      color: #f8d7da;
+    }
+  }
+}
+
+// Ana İçerik Alanı
+.admin-main-content {
+  flex-grow: 1; // Kalan tüm alanı kapla
+  padding: 30px 40px; // İçerik için boşluk
+  margin-left: 240px; // Kenar menüsü genişliği kadar soldan boşluk bırak (eğer sidebar fixed ise)
+  // Eğer sidebar fixed değilse margin-left: 0; kullan
+  background-color: #1a1a1a; // Ana içerik alanı arka planı
+}
+
+/* --- Responsive Ayarlar (Örnek) --- */
+@media (max-width: 992px) {
+  .admin-sidebar {
+    // Küçük ekranlarda sidebar'ı gizleyip bir butonla açılır hale getirebiliriz
+    // Veya genişliğini azaltabiliriz
+    width: 200px;
+  }
+  .admin-main-content {
+    margin-left: 200px; // Sidebar genişliğine göre ayarla
+    padding: 25px 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-layout-container {
+     // Belki sidebar tamamen gizlenir ve bir toggle butonu eklenir
+     // Şimdilik basitçe içeriği sola kaydıralım
+  }
+   .admin-sidebar {
+     position: absolute; // Veya transform ile gizle/göster
+     left: -240px; // Başlangıçta gizli
+     transition: left 0.3s ease-in-out;
+     // Menü açıkken gösterilecek bir class eklenmeli (örn: .sidebar-open)
+     // .admin-layout-container.sidebar-open & { left: 0; }
+   }
+   .admin-main-content {
+     margin-left: 0; // Tam genişlik kullan
+     padding: 20px;
+   }
+   // Hamburger benzeri bir menü butonu eklenmeli
+}

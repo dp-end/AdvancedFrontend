@@ -1,0 +1,134 @@
+<nav class="navbar">
+  <div class="logo-container">
+    <img src="assets/Logo.png" alt="Logo" class="logo" />
+    <span class="logo-text">CHIMAX</span>
+  </div>
+
+  <div class="hamburger-menu" (click)="toggleMenu()" [class.active]="menuOpen">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+
+  <div class="navbar-content" [class.show]="menuOpen">
+    <button [routerLink]="['/urunler']" (click)="closeMobileMenu()">Ürünler</button>
+    <button [routerLink]="['/cart']" (click)="closeMobileMenu()" class="cart-button">
+      🛒 Sepet
+    </button>
+
+    <ng-container *ngIf="!isLoggedIn; else loggedInButtons">
+      <button (click)="openLogin(); closeMobileMenu()">Giriş Yap</button>
+      <button (click)="openRegister(); closeMobileMenu()">Kaydol</button>
+    </ng-container>
+
+    <ng-template #loggedInButtons>
+      <button [routerLink]="['/siparislerim']" (click)="closeMobileMenu()">
+        Siparişlerim
+      </button>
+      <button *ngIf="authService.isSeller()" [routerLink]="['/seller']" (click)="closeMobileMenu()">
+        Satıcı Panelim
+      </button>
+      <button *ngIf="authService.isAdmin()" [routerLink]="['/admin']" (click)="closeMobileMenu()">
+        Admin Panel
+      </button>
+      <button (click)="onLogout(); closeMobileMenu()">Çıkış Yap</button>
+    </ng-template>
+
+  </div>
+</nav>
+
+<div *ngIf="showRegisterForm" class="modal">
+  <form [formGroup]="registerForm" (ngSubmit)="onRegister()" class="auth-form">
+    <h3>Yeni Hesap Oluştur</h3>
+    <div *ngIf="registerError" class="form-error-message">{{ registerError }}</div>
+
+    <div class="form-group">
+      <label for="regFirstName">Adınız</label>
+      <input id="regFirstName" type="text" class="form-control" formControlName="firstName" placeholder="Adınız"
+             [ngClass]="{ 'is-invalid': registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched }"/>
+      <div *ngIf="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched" class="invalid-feedback">
+        <small *ngIf="registerForm.get('firstName')?.errors?.['required']">Ad alanı zorunludur.</small>
+        <small *ngIf="registerForm.get('firstName')?.errors?.['minlength']">Adınız en az 2 karakter olmalıdır.</small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="regLastName">Soyadınız</label>
+      <input id="regLastName" type="text" class="form-control" formControlName="lastName" placeholder="Soyadınız"
+             [ngClass]="{ 'is-invalid': registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched }"/>
+      <div *ngIf="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched" class="invalid-feedback">
+        <small *ngIf="registerForm.get('lastName')?.errors?.['required']">Soyad alanı zorunludur.</small>
+        <small *ngIf="registerForm.get('lastName')?.errors?.['minlength']">Soyadınız en az 2 karakter olmalıdır.</small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="regEmail">E-posta Adresiniz</label>
+      <input id="regEmail" type="email" class="form-control" formControlName="email" placeholder="E-posta adresiniz"
+             [ngClass]="{ 'is-invalid': registerForm.get('email')?.invalid && registerForm.get('email')?.touched }"/>
+      <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="invalid-feedback">
+        <small *ngIf="registerForm.get('email')?.errors?.['required']">E-posta alanı zorunludur.</small>
+        <small *ngIf="registerForm.get('email')?.errors?.['email']">Lütfen geçerli bir e-posta adresi girin.</small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="regPassword">Şifre</label>
+      <input id="regPassword" type="password" class="form-control" formControlName="password" placeholder="Şifreniz"
+             [ngClass]="{ 'is-invalid': registerForm.get('password')?.invalid && registerForm.get('password')?.touched }"/>
+      <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="invalid-feedback">
+        <small *ngIf="registerForm.get('password')?.errors?.['required']">Şifre alanı zorunludur.</small>
+        <small *ngIf="registerForm.get('password')?.errors?.['minlength']">Şifre en az 6 karakter olmalıdır.</small>
+      </div>
+    </div>
+
+    <div class="form-check mb-3">
+      <input class="form-check-input" type="checkbox" id="registerAsSellerCheck" formControlName="registerAsSeller">
+      <label class="form-check-label" for="registerAsSellerCheck">
+        Satıcı olarak da kaydolmak istiyorum (Ürünlerimi platformda satmak için)
+      </label>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="registerForm.invalid || registerForm.pending">
+        <span *ngIf="registerForm.pending" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+        Kaydol
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="closeForms()">İptal</button>
+    </div>
+  </form>
+</div>
+
+<div *ngIf="showLoginForm" class="modal">
+  <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="auth-form">
+    <h3>Giriş Yap</h3>
+    <div *ngIf="loginError" class="form-error-message">{{ loginError }}</div>
+
+    <div class="form-group">
+      <label for="loginEmail">E-posta Adresiniz</label>
+      <input id="loginEmail" type="email" class="form-control" formControlName="email" placeholder="E-posta adresiniz"
+             [ngClass]="{ 'is-invalid': loginForm.get('email')?.invalid && loginForm.get('email')?.touched }"/>
+      <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="invalid-feedback">
+        <small *ngIf="loginForm.get('email')?.errors?.['required']">E-posta alanı zorunludur.</small>
+        <small *ngIf="loginForm.get('email')?.errors?.['email']">Lütfen geçerli bir e-posta adresi girin.</small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="loginPassword">Şifre</label>
+      <input id="loginPassword" type="password" class="form-control" formControlName="password" placeholder="Şifreniz"
+             [ngClass]="{ 'is-invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched }"/>
+      <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="invalid-feedback">
+        <small *ngIf="loginForm.get('password')?.errors?.['required']">Şifre alanı zorunludur.</small>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid || loginForm.pending">
+        <span *ngIf="loginForm.pending" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+        Giriş Yap
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="closeForms()">İptal</button>
+    </div>
+  </form>
+</div>

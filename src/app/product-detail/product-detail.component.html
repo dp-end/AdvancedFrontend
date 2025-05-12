@@ -1,0 +1,192 @@
+<div class="product-detail-page container my-4"> <div class="navigation-bar mb-3">
+    <button (click)="goBack()" class="btn btn-outline-secondary btn-sm d-flex align-items-center">
+      <span class="material-icons-outlined me-1" style="font-size: 1.1rem;">arrow_back</span> Ürünlere Geri Dön
+    </button>
+  </div>
+
+  <div *ngIf="isLoadingProduct" class="loading-indicator text-center py-5">
+    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+      <span class="visually-hidden">Yükleniyor...</span>
+    </div>
+    <p class="lead mt-3">Ürün detayları yükleniyor, lütfen bekleyin...</p>
+  </div>
+
+  <div *ngIf="!isLoadingProduct && productError" class="error-message-container alert alert-danger text-center py-4 shadow-sm rounded">
+    <h2 class="alert-heading">Bir Sorun Oluştu!</h2>
+    <p>{{ productError }}</p>
+    <hr>
+    <button (click)="goBack()" class="btn btn-primary mt-2">Tekrar Ürünlere Dön</button>
+  </div>
+
+  <div *ngIf="!isLoadingProduct && !product && !productError" class="not-found-container text-center py-5">
+    <span class="material-icons-outlined display-1 text-warning">error_outline</span>
+    <h2 class="display-5 mt-3">Ürün Bulunamadı</h2>
+    <p class="lead">Aradığınız kriterlere uygun bir ürün mevcut değil veya artık satışta değil.</p>
+    <button (click)="goBack()" class="btn btn-info mt-3">Tüm Ürünleri Gör</button>
+  </div>
+
+  <ng-container *ngIf="!isLoadingProduct && product && !productError">
+    <div class="product-detail-content container-fluid bg-light p-4 rounded shadow-sm">
+      <div class="row">
+        <div class="col-lg-6 mb-4 mb-lg-0 product-image-section text-center">
+          <img
+            [src]="product.imageUrl || 'assets/images/default-product.png'" [alt]="product.name || 'Ürün Resmi'"
+            class="img-fluid rounded product-main-image shadow"
+            onError="this.src='assets/images/default-product.png'; this.alt='Resim yüklenemedi'"
+            style="max-height: 500px; object-fit: contain;">
+        </div>
+
+        <div class="col-lg-6 product-info-section">
+          <h1 class="product-title display-5 mb-3">{{ product.name }}</h1>
+
+          <div class="product-meta mb-3">
+            <span class="badge bg-secondary me-2 fs-6" *ngIf="product.category">
+              <span class="material-icons-outlined" style="font-size: 1rem; vertical-align: text-bottom;">category</span>
+              {{ product.category }}
+            </span>
+            <span class="badge bg-info fs-6" *ngIf="product.type">
+              <span class="material-icons-outlined" style="font-size: 1rem; vertical-align: text-bottom;">style</span>
+              {{ product.type }}
+            </span>
+          </div>
+
+          <p class="product-description lead mb-4">{{ product.description || 'Bu ürün için henüz bir açıklama girilmemiştir.' }}</p>
+
+          <div class="price-stock-wrapper d-flex flex-column flex-sm-row align-items-sm-center justify-content-between mb-4 p-3 bg-white rounded shadow-sm">
+            <p class="product-price h2 mb-2 mb-sm-0 me-sm-4 text-primary">
+              {{ product.price | currency:'TRY':'symbol':'1.2-2' }}
+            </p>
+            <div class="stock-status">
+              <ng-container *ngIf="product.active && typeof product.stockQuantity === 'number' && product.stockQuantity > 0">
+                <span class="badge bg-success fs-6 p-2">
+                  <span class="material-icons-outlined" style="font-size: 1rem; vertical-align: text-bottom;">check_circle</span>
+                  Stokta Mevcut ({{ product.stockQuantity }} adet)
+                </span>
+              </ng-container>
+              <ng-container *ngIf="product.active && product.stockQuantity === 0">
+                <span class="badge bg-danger fs-6 p-2">
+                  <span class="material-icons-outlined" style="font-size: 1rem; vertical-align: text-bottom;">remove_shopping_cart</span>
+                  Tükendi
+                </span>
+              </ng-container>
+              <ng-container *ngIf="!product.active">
+                <span class="badge bg-warning text-dark fs-6 p-2">
+                  <span class="material-icons-outlined" style="font-size: 1rem; vertical-align: text-bottom;">visibility_off</span>
+                  Şu Anda Satışta Değil
+                </span>
+              </ng-container>
+            </div>
+          </div>
+
+          <button
+            (click)="addToCart()"
+            class="btn btn-primary btn-lg w-100 add-to-cart-button mb-4 d-flex align-items-center justify-content-center"
+            [disabled]="!product.active || product.stockQuantity === 0">
+            <span class="material-icons-outlined me-2">shopping_cart</span>
+            {{ (!product.active || product.stockQuantity === 0) ? 'Stokta Yok' : 'Sepete Ekle' }}
+          </button>
+
+          <div class="additional-info mt-4">
+            <h4>Ürün Özellikleri</h4>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item"><strong>Model ID:</strong> {{ product.id }}</li>
+              <li class="list-group-item"><strong>Garanti:</strong> 2 Yıl (Örnek Bilgi)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-5">
+        <div class="col-12 reviews-container card shadow-sm">
+          <div class="card-body">
+            <h3 class="mb-3 card-title">Ürün Yorumları ({{ reviews.length }})</h3>
+            <hr>
+            <div *ngIf="isLoadingReviews" class="loading-indicator text-center py-3">
+              <div class="spinner-border spinner-border-sm text-secondary" role="status">
+                <span class="visually-hidden">Yorumlar yükleniyor...</span>
+              </div>
+              <p class="mt-2 text-muted">Yorumlar yükleniyor...</p>
+            </div>
+            <div *ngIf="reviewError && !isLoadingReviews" class="error-message-container alert alert-warning text-center py-3">
+              <p>{{ reviewError }}</p>
+              <button *ngIf="numericProductId" (click)="loadReviews(numericProductId)" class="btn btn-sm btn-outline-secondary mt-1">Tekrar Dene</button>
+            </div>
+
+            <div *ngIf="!isLoadingReviews && !reviewError">
+              <ul *ngIf="reviews.length > 0; else noReviewsTemplate" class="list-unstyled review-list-items">
+                <li *ngFor="let review of reviews" class="review-item border-bottom pb-3 mb-3">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <strong class="review-username">{{ review.userName || 'Anonim Kullanıcı' }}</strong>
+                    <small class="review-timestamp text-muted">{{ review.reviewDate | date:'dd/MM/yyyy HH:mm' }}</small>
+                  </div>
+                  <div class="review-rating-stars mb-2">
+                    <span *ngFor="let filled of getStars(review.rating)" class="star" [class.filled]="filled">★</span>
+                  </div>
+                  <p class="review-text mb-0">{{ review.comment }}</p>
+                </li>
+              </ul>
+              <ng-template #noReviewsTemplate>
+                <p class="text-muted text-center py-3">Bu ürün için henüz yorum yapılmamış. İlk yorumu siz yapın!</p>
+              </ng-template>
+            </div>
+
+            <div class="add-review-form-container mt-4">
+              <button *ngIf="authService.isLoggedIn() && !showReviewForm" (click)="toggleReviewForm()" class="btn btn-outline-success">
+                <span class="material-icons-outlined me-1" style="font-size: 1.1rem; vertical-align: text-bottom;">add_comment</span> Yorum Ekle
+              </button>
+
+              <form *ngIf="authService.isLoggedIn() && showReviewForm" [formGroup]="reviewForm" (ngSubmit)="onSubmitReview()" class="p-3 border rounded bg-light review-submission-form">
+                <h4 class="mb-3">Yorumunuzu Paylaşın</h4>
+                <div class="mb-3 rating-input-group">
+                  <label class="form-label d-block">Puanınız: <span class="text-danger">*</span></label>
+                  <div class="btn-group" role="group" aria-label="Puanlama">
+                    <input type="radio" class="btn-check" name="rating" id="rating1" [value]="1" formControlName="rating">
+                    <label class="btn btn-outline-warning star-button" for="rating1">★</label>
+                    <input type="radio" class="btn-check" name="rating" id="rating2" [value]="2" formControlName="rating">
+                    <label class="btn btn-outline-warning star-button" for="rating2">★</label>
+                    <input type="radio" class="btn-check" name="rating" id="rating3" [value]="3" formControlName="rating">
+                    <label class="btn btn-outline-warning star-button" for="rating3">★</label>
+                    <input type="radio" class="btn-check" name="rating" id="rating4" [value]="4" formControlName="rating">
+                    <label class="btn btn-outline-warning star-button" for="rating4">★</label>
+                    <input type="radio" class="btn-check" name="rating" id="rating5" [value]="5" formControlName="rating">
+                    <label class="btn btn-outline-warning star-button" for="rating5">★</label>
+                  </div>
+                  <div *ngIf="reviewForm.get('rating')?.invalid && reviewForm.get('rating')?.touched" class="invalid-feedback d-block mt-1">
+                    Lütfen 1-5 arası bir puan seçin.
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="commentText" class="form-label">Yorumunuz: <span class="text-danger">*</span></label>
+                  <textarea id="commentText" class="form-control" formControlName="comment" rows="4" placeholder="Ürün hakkındaki düşüncelerinizi paylaşın (en az 10 karakter)"></textarea>
+                  <div *ngIf="reviewForm.get('comment')?.invalid && reviewForm.get('comment')?.touched" class="invalid-feedback d-block mt-1">
+                    <span *ngIf="reviewForm.get('comment')?.errors?.['required']">Yorum alanı boş bırakılamaz.</span>
+                    <span *ngIf="reviewForm.get('comment')?.errors?.['minlength']">Yorum en az 10 karakter olmalıdır.</span>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-end">
+                  <button type="button" (click)="toggleReviewForm()" class="btn btn-outline-secondary me-2">İptal</button>
+                  <button type="submit" [disabled]="reviewForm.invalid || isReviewSubmitting" class="btn btn-success">
+                    <span *ngIf="isReviewSubmitting" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                    {{ isReviewSubmitting ? 'Gönderiliyor...' : 'Yorumu Gönder' }}
+                  </button>
+                </div>
+              </form>
+              <p *ngIf="!authService.isLoggedIn()" class="alert alert-info mt-3">
+                Yorum yapmak için lütfen <a href="javascript:void(0)" (click)="authService.promptLogin()">giriş yapın</a>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-5">
+          <div class="col-12 comparison-placeholder text-center text-muted py-4">
+              <h3 class="mb-3">Ürün Karşılaştırma</h3>
+              <hr>
+              <p>(Bu özellik yakında aktif olacaktır.)</p>
+              <button class="btn btn-outline-info" disabled>Karşılaştırmaya Ekle (Yakında)</button>
+          </div>
+      </div>
+
+    </div> </ng-container>
+</div>

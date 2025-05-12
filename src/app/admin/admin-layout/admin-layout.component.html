@@ -1,0 +1,19 @@
+<div class="admin-layout-container">
+  <aside class="admin-sidebar">
+    <h2>Admin Paneli</h2>
+    <nav>
+      <ul>
+        <li><a routerLink="dashboard" routerLinkActive="active-link">Gösterge Paneli</a></li>
+        <li><a routerLink="products" routerLinkActive="active-link">Ürünleri Yönet</a></li>
+        <li><a routerLink="orders" routerLinkActive="active-link">Siparişleri Yönet</a></li>
+        <li><a routerLink="users" routerLinkActive="active-link">Kullanıcıları Yönet</a></li>
+        <li><a routerLink="messages" routerLinkActive="active-link">İletişim Mesajları</a></li> <li><hr></li>
+        <li><a routerLink="/">Siteye Dön</a></li>
+        <li><a href="javascript:void(0)" (click)="logout()">Çıkış Yap</a></li>
+      </ul>
+    </nav>
+  </aside>
+  <main class="admin-main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

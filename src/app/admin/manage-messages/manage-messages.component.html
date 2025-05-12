@@ -1,0 +1,57 @@
+<div class="admin-page-container">
+  <h1>İletişim Mesajları</h1>
+
+  <div *ngIf="isLoading" class="loading-state">Mesajlar yükleniyor...</div>
+  <div *ngIf="error && !isLoading" class="error-state">
+    {{ error }} <button (click)="loadMessages()" class="btn-retry">Tekrar Dene</button>
+  </div>
+
+  <ng-container *ngIf="!isLoading && !error">
+    <div *ngIf="messages.length > 0; else noMessages" class="admin-table-container">
+      <table class="admin-table messages-table"> <thead>
+          <tr>
+            <th>ID</th>
+            <th>Gönderen</th>
+            <th>Email</th>
+            <th>Tarih</th>
+            <th>Durum</th> <th>Aksiyonlar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let message of messages" [class.unread]="message.status === 'NEW'"> <td>{{ message.id }}</td>
+            <td>{{ message.name }}</td>
+            <td><a href="mailto:{{ message.email }}">{{ message.email }}</a></td>
+            <td>{{ message.receivedAt | date:'dd.MM.yyyy HH:mm' }}</td>
+            <td>
+              <span *ngIf="message.status" class="status-badge" [ngClass]="'status-' + message.status.toLowerCase()">
+                 {{ message.status }}
+              </span>
+            </td>
+            <td class="action-buttons">
+              <button (click)="viewMessageDetail(message)" class="btn-view">Oku</button>
+              <button (click)="deleteMessage(message.id)" class="btn-delete">Sil</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <ng-template #noMessages>
+      <div class="no-orders-message"> <p>Gösterilecek iletişim mesajı bulunmamaktadır.</p>
+      </div>
+    </ng-template>
+  </ng-container>
+
+  <div *ngIf="selectedMessage" class="message-detail-modal-overlay" (click)="closeMessageDetail()">
+    <div class="message-detail-modal-content" (click)="$event.stopPropagation()">
+      <button (click)="closeMessageDetail()" class="close-modal-btn">X</button>
+      <h3>Mesaj Detayı (ID: {{ selectedMessage.id }})</h3>
+      <p><strong>Gönderen:</strong> {{ selectedMessage.name }} ({{ selectedMessage.email }})</p>
+      <p><strong>Tarih:</strong> {{ selectedMessage.receivedAt | date:'dd.MM.yyyy HH:mm:ss' }}</p>
+      <hr>
+      <p><strong>Mesaj:</strong></p>
+      <pre class="message-body">{{ selectedMessage.message }}</pre> <hr>
+      <button class="btn-delete" (click)="deleteMessage(selectedMessage.id); closeMessageDetail()">Mesajı Sil</button>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,45 @@
+// src/app/seller-admin/seller-layout/seller-layout.component.scss
+
+:host {
+  display: block; // Component'in kendisinin blok seviyesinde olmasını sağlar
+  min-height: calc(100vh - 70px); // Navbar yüksekliği (varsa) düşülmüş tam ekran yüksekliği
+                                  // Eğer navbar'ınız yoksa veya farklı bir yükseklikteyse bu değeri ayarlayın.
+  background-color: #f4f7f6; // Panel için genel bir arka plan rengi
+}
+
+.seller-dashboard-layout {
+  display: flex;
+  min-height: inherit; // :host'tan gelen min-height'ı miras al
+
+  .seller-sidebar {
+    // Sidebar genişliği (bu değer SellerSidebarComponent'in kendi SCSS'inde de ayarlanabilir)
+    // Örnek:
+    // flex: 0 0 250px; // Sabit genişlik, büyümez/küçülmez
+    // Daha dinamik bir yaklaşım için SellerSidebarComponent'in kendi SCSS'ine bakın.
+    // Burada sadece yerleşimi belirtiyoruz.
+    // Sidebar'ın kendi stilleri SellerSidebarComponent.scss içinde olacak.
+    // Örneğin, arka plan rengi, gölge vb.
+  }
+
+  .seller-content {
+    flex-grow: 1; // Kalan tüm alanı kapla
+    // overflow-y: auto; // İçerik taşarsa dikey scrollbar çıksın (isteğe bağlı)
+    // padding: 20px; // İçerik alanına genel bir padding (HTML'deki .content-wrapper'a da eklendi)
+
+    .content-wrapper {
+      // p-3 ve p-md-4 Bootstrap class'larıdır.
+      // Eğer Bootstrap kullanmıyorsanız, bu padding'leri burada tanımlayabilirsiniz:
+      // padding: 1rem; // Mobil için
+      // @media (min-width: 768px) { // md breakpoint
+      //   padding: 1.5rem;
+      // }
+      // Veya doğrudan:
+      // padding: 20px 25px;
+    }
+  }
+}
+
+// Mobil cihazlar için sidebar'ı gizleyip hamburger menü ile açma mantığı eklenecekse,
+// bu stiller daha karmaşık hale gelecektir ve sidebar'ın durumunu yöneten
+// bir servis veya component state'i gerekebilir.
+// Şimdilik basit bir yan yana yerleşim varsayıyoruz.

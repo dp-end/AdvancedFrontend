@@ -1,0 +1,107 @@
+// Formun genel konteyneri
+.add-product-container {
+  max-width: 700px; // Formun maksimum genişliği
+  margin: 0 auto; // Ortala
+  padding: 30px;
+  background-color: #343a40; // Form arka planı
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  color: #f8f9fa;
+
+  h2 {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 30px;
+    color: #e9ecef;
+  }
+}
+
+// Form grupları ve elemanları
+.form-group {
+  margin-bottom: 20px;
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #adb5bd;
+    font-size: 0.9rem;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  input[type="url"], // imageUrl için type="url" kullanılabilir
+  textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #495057;
+    border-radius: 6px;
+    background-color: #495057; // Input arka planı
+    color: #f8f9fa;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    &.ng-invalid.ng-touched {
+      border-color: #dc3545; // Hata rengi
+    }
+
+    &:focus {
+      outline: none;
+      border-color: #f4a261; // Odak rengi (sarı)
+      background-color: #5a6268; // Odakta biraz daha açık
+      box-shadow: 0 0 0 0.15rem rgba(244, 162, 97, 0.2);
+    }
+
+     &::placeholder {
+      color: #6c757d;
+    }
+  }
+
+  textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  // Hata mesajları
+  .error-message { // Alan bazlı hatalar için
+    display: block;
+    margin-top: 5px;
+    color: #f8d7da;
+    font-size: 0.85rem;
+  }
+}
+
+// Form butonları
+.form-actions {
+  margin-top: 30px;
+  display: flex;
+  justify-content: flex-end; // Butonları sağa yasla
+  gap: 10px;
+
+  button {
+    padding: 10px 25px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, opacity 0.2s;
+
+    &[type="submit"] { // Kaydet/Güncelle butonu
+      background-color: #f4a261; // Sarı vurgu
+      color: #1a1a1a;
+      &:hover:not(:disabled) { background-color: #e76f51; }
+    }
+
+    &[type="button"] { // İptal/Geri butonu
+      background-color: #6c757d; // Gri
+      color: white;
+       &:hover:not(:disabled) { background-color: #5a6268; }
+    }
+
+     &:disabled { // Pasif buton
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}

@@ -1,0 +1,127 @@
+<div class="seller-product-form-container container mt-4 mb-5">
+  <div class="page-header d-flex justify-content-between align-items-center mb-4">
+    <h2>{{ pageTitle }}</h2>
+    <button (click)="goBack()" class="btn btn-outline-secondary btn-sm d-flex align-items-center">
+      <span class="material-icons-outlined me-1" style="font-size: 1.1rem;">arrow_back</span> Geri Dön
+    </button>
+  </div>
+
+  <div *ngIf="isLoading && isEditMode" class="loading-indicator text-center my-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Ürün bilgileri yükleniyor...</span>
+    </div>
+    <p class="mt-2">Ürün bilgileri yükleniyor...</p>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{ errorMessage }}
+    <button type="button" class="btn-close" (click)="errorMessage = null" aria-label="Close"></button>
+  </div>
+  <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ successMessage }}
+    <button type="button" class="btn-close" (click)="successMessage = null" aria-label="Close"></button>
+  </div>
+
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading || !isEditMode" class="product-form needs-validation" novalidate enctype="multipart/form-data">
+
+    <div class="mb-3 form-field">
+      <label for="name" class="form-label">Ürün Adı <span class="text-danger">*</span></label>
+      <input type="text" id="name" class="form-control" formControlName="name"
+             [ngClass]="{ 'is-invalid': name?.invalid && (name?.dirty || name?.touched) }">
+      <div *ngIf="name?.invalid && (name?.dirty || name?.touched)" class="invalid-feedback">
+        <div *ngIf="name?.errors?.['required']">Ürün adı zorunludur.</div>
+        <div *ngIf="name?.errors?.['maxlength']">Ürün adı en fazla 200 karakter olabilir.</div>
+      </div>
+    </div>
+
+    <div class="mb-3 form-field">
+      <label for="description" class="form-label">Açıklama</label>
+      <textarea id="description" class="form-control" formControlName="description" rows="4"
+                [ngClass]="{ 'is-invalid': description?.invalid && (description?.dirty || description?.touched) }"></textarea>
+      <div *ngIf="description?.invalid && (description?.dirty || description?.touched)" class="invalid-feedback">
+        <div *ngIf="description?.errors?.['maxlength']">Açıklama en fazla 5000 karakter olabilir.</div>
+      </div>
+    </div>
+
+    <div class="mb-3 form-field">
+      <label for="price" class="form-label">Fiyat (₺) <span class="text-danger">*</span></label>
+      <input type="number" id="price" class="form-control" formControlName="price" step="0.01"
+             [ngClass]="{ 'is-invalid': price?.invalid && (price?.dirty || price?.touched) }">
+      <div *ngIf="price?.invalid && (price?.dirty || price?.touched)" class="invalid-feedback">
+        <div *ngIf="price?.errors?.['required']">Fiyat zorunludur.</div>
+        <div *ngIf="price?.errors?.['min']">Fiyat 0.01'den büyük veya eşit olmalıdır.</div>
+        <div *ngIf="price?.errors?.['pattern']">Geçerli bir fiyat formatı girin (örn: 123.45).</div>
+      </div>
+    </div>
+
+    <div class="mb-3 form-field">
+      <label for="category" class="form-label">Kategori <span class="text-danger">*</span></label>
+      <select id="category" class="form-select" formControlName="category"
+              [ngClass]="{ 'is-invalid': category?.invalid && (category?.dirty || category?.touched) }">
+        <option [ngValue]="null" disabled>-- Kategori Seçiniz --</option>
+        <option *ngFor="let cat of availableCategories" [value]="cat.name">
+          {{ cat.name }}
+        </option>
+      </select>
+      <div *ngIf="category?.invalid && (category?.dirty || category?.touched)" class="invalid-feedback">
+        <div *ngIf="category?.errors?.['required']">Kategori seçimi zorunludur.</div>
+      </div>
+    </div>
+
+    <div class="mb-3 form-field">
+      <label for="type" class="form-label">Tip / Çeşit</label>
+      <input type="text" id="type" class="form-control" formControlName="type"
+             [ngClass]="{ 'is-invalid': type?.invalid && (type?.dirty || type?.touched) }">
+      <div *ngIf="type?.invalid && (type?.dirty || type?.touched)" class="invalid-feedback">
+        <div *ngIf="type?.errors?.['maxlength']">Tip en fazla 100 karakter olabilir.</div>
+      </div>
+    </div>
+
+    <div class="mb-3 form-field">
+      <label for="imageFile" class="form-label">Ürün Resmi</label>
+      <input type="file" id="imageFile" class="form-control" (change)="onFileSelected($event)" accept="image/png, image/jpeg, image/gif">
+
+      <div *ngIf="imagePreviewUrl" class="mt-3 image-preview-container text-center">
+        <p class="mb-1 small text-muted">
+          {{ selectedFile ? 'Yeni Resim Önizlemesi:' : (isEditMode && productForm.get('imageUrl')?.value ? 'Mevcut Resim:' : 'Varsayılan Resim:') }}
+        </p>
+        <img [src]="imagePreviewUrl"
+             [alt]="selectedFile ? 'Yeni Resim Önizleme' : (isEditMode && productForm.get('imageUrl')?.value ? 'Mevcut Resim' : 'Varsayılan Ürün Resmi')"
+             class="image-preview img-thumbnail"
+             style="max-width: 250px; max-height: 250px; object-fit: contain;">
+
+        <button *ngIf="imagePreviewUrl !== defaultImageUrl || (isEditMode && productForm.get('imageUrl')?.value)"
+                type="button" (click)="removeCurrentImage()" class="btn btn-sm btn-outline-danger mt-2 d-block mx-auto">
+          Resmi Kaldır / Varsayılana Dön
+        </button>
+      </div>
+      <input type="hidden" formControlName="imageUrl">
+    </div>
+
+    <div class="mb-3 form-field">
+      <label for="stockQuantity" class="form-label">Stok Miktarı <span class="text-danger">*</span></label>
+      <input type="number" id="stockQuantity" class="form-control" formControlName="stockQuantity" min="0"
+             [ngClass]="{ 'is-invalid': stockQuantity?.invalid && (stockQuantity?.dirty || stockQuantity?.touched) }">
+      <div *ngIf="stockQuantity?.invalid && (stockQuantity?.dirty || stockQuantity?.touched)" class="invalid-feedback">
+        <div *ngIf="stockQuantity?.errors?.['required']">Stok miktarı zorunludur.</div>
+        <div *ngIf="stockQuantity?.errors?.['min']">Stok miktarı 0'dan küçük olamaz.</div>
+        <div *ngIf="stockQuantity?.errors?.['pattern']">Lütfen geçerli bir sayı girin.</div>
+      </div>
+    </div>
+
+    <div class="mb-3 form-check">
+      <input type="checkbox" id="active" class="form-check-input" formControlName="active">
+      <label for="active" class="form-check-label">Ürün Satışta (Aktif)</label>
+    </div>
+
+    <hr class="my-4">
+
+    <div class="form-actions d-flex justify-content-end">
+      <button type="button" (click)="goBack()" class="btn btn-secondary me-2">İptal</button>
+      <button type="submit" class="btn btn-primary btn-submit" [disabled]="productForm.invalid || isLoading">
+        <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+        {{ isLoading ? 'Kaydediliyor...' : (isEditMode ? 'Ürünü Güncelle' : 'Ürünü Oluştur') }}
+      </button>
+    </div>
+  </form>
+</div>

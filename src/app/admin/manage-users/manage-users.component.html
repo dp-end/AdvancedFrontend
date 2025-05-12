@@ -1,0 +1,46 @@
+<div class="admin-page-container">
+  <h1>Kullanıcıları Yönet</h1>
+
+  <div *ngIf="isLoading" class="loading-state">Kullanıcılar yükleniyor...</div>
+  <div *ngIf="error" class="error-state">{{ error }} <button (click)="loadUsers()" class="btn-retry">Tekrar Dene</button></div>
+
+  <ng-container *ngIf="!isLoading && !error">
+    <div *ngIf="users.length > 0; else noUsers" class="admin-table-container">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>İsim Soyisim</th>
+            <th>Email</th>
+            <th>Roller</th>
+            <th>Durum</th>
+            <th>Aksiyonlar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td>{{ user.id }}</td>
+            <td>{{ user.firstName }} {{ user.lastName }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.roles.join(', ') }}</td>
+            <td>
+              <span class="status-badge" [class.status-active]="user.enabled" [class.status-inactive]="!user.enabled">
+                 {{ user.enabled ? 'Aktif' : 'Pasif' }}
+               </span>
+            </td>
+            <td class="action-buttons">
+               <button class="btn-view" disabled>Detay</button>
+               <button (click)="toggleUserStatus(user)" [ngClass]="user.enabled ? 'btn-delete' : 'btn-edit'">
+                  {{ user.enabled ? 'Pasif Yap' : 'Aktif Yap' }}
+               </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <ng-template #noUsers>
+       <div class="no-orders-message"> <p>Gösterilecek kullanıcı bulunamadı.</p>
+       </div>
+    </ng-template>
+  </ng-container>
+</div>

@@ -1,1 +1,98 @@
-/* You can add global styles to this file, and also import other style files */
+// Bu stiller manage-products.component.scss, manage-orders.component.scss vb.
+// dosyalara eklenebilir veya global bir stile taşınabilir.
+
+.admin-table-container {
+  background-color: #343a40; // Tablo arka planı
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  overflow-x: auto; // Yatay kaydırma
+  color: #f8f9fa;
+}
+
+.admin-table {
+  width: 100%;
+  min-width: 700px; // Minimum genişlik
+  border-collapse: collapse;
+  color: #ced4da;
+
+  th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #495057;
+    vertical-align: middle;
+  }
+
+  th {
+    background-color: rgba(73, 80, 87, 0.5);
+    font-weight: 600;
+    color: #f8f9fa;
+    white-space: nowrap;
+  }
+
+  tbody tr {
+    transition: background-color 0.15s ease;
+    &:hover {
+      background-color: rgba(73, 80, 87, 0.3);
+    }
+  }
+
+  // Tablo içindeki aksiyon butonları
+  .action-buttons {
+    display: flex;
+    gap: 8px;
+    white-space: nowrap; // Butonların alta kaymasını engelle
+
+    button, a { // Hem buton hem linkler için
+      padding: 5px 10px;
+      font-size: 0.85rem;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      border: 1px solid transparent;
+      transition: background-color 0.2s, border-color 0.2s, color 0.2s, opacity 0.2s;
+
+      &.btn-edit { // Düzenle butonu
+        background-color: #17a2b8; // Mavi/Turkuaz
+        border-color: #17a2b8;
+        color: white;
+        &:hover { background-color: #138496; border-color: #117a8b;}
+      }
+      &.btn-delete { // Sil/Pasif Yap butonu
+        background-color: #dc3545; // Kırmızı
+        border-color: #dc3545;
+        color: white;
+         &:hover { background-color: #c82333; border-color: #bd2130;}
+      }
+       &.btn-view { // Görüntüle butonu
+        background-color: #6c757d; // Gri
+        border-color: #6c757d;
+        color: white;
+         &:hover { background-color: #5a6268; border-color: #545b62;}
+      }
+       &:disabled {
+         opacity: 0.5;
+         cursor: not-allowed;
+       }
+    }
+  }
+
+  // Küçük resimler için (örn: ürün listesi)
+  .table-product-image {
+     width: 40px;
+     height: 40px;
+     object-fit: cover;
+     border-radius: 4px;
+     vertical-align: middle;
+     margin-right: 10px;
+  }
+}
+
+// Sayfalama veya filtreleme kontrolleri için stil eklenebilir
+.table-controls {
+   margin-top: 20px;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   // ... (sayfalama butonları, filtre dropdownları vb. için stiller)
+}

@@ -1,0 +1,281 @@
+/* --- Navbar Genel Stil --- */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(to bottom, #f0f0f0, #f0f0f0); // Açık tema arka planı
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000; // Diğer içeriklerin üzerinde kalması için yüksek z-index
+  height: 70px; // Sabit yükseklik
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); // Hafif gölge
+}
+
+/* --- Logo --- */
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 10px; // Logo ve metin arası boşluk
+}
+
+.logo {
+  height: 60px; // Logo yüksekliği
+  object-fit: contain; // Resmin oranını koru
+}
+
+.logo-text {
+  font-size: 24px;
+  font-weight: bold;
+  color: #d4af37; // Logo metin rengi (Altın sarısı tonu)
+  letter-spacing: 1px;
+}
+
+/* --- Navbar Butonları (Masaüstü) --- */
+.navbar-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px; // Butonlar arası boşluk
+  // Ortalamak için absolute pozisyonlama (alternatif olarak flex-grow kullanılabilir)
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: all 0.3s ease; // Mobil menü geçişi için
+}
+
+// Navbar içindeki tüm butonlar için genel stil
+.navbar button {
+  padding: 10px 18px; // Buton iç boşluğu biraz azaltıldı
+  background-color: #333; // Koyu buton arka planı
+  color: white; // Açık buton yazısı
+  border: none;
+  cursor: pointer;
+  font-size: 15px; // Font boyutu biraz küçültüldü
+  border-radius: 8px; // Köşe yuvarlaklığı azaltıldı
+  min-width: auto; // Minimum genişlik kaldırıldı, içeriğe göre ayarlanacak
+  text-align: center;
+  transition: background-color 0.3s ease, transform 0.1s ease; // Hover geçişi
+  font-weight: 500; // Yazı kalınlığı
+
+  &:hover {
+    background-color: #a10a0a; // Hover rengi (Koyu Kırmızı)
+    transform: translateY(-1px); // Hafif yukarı kalkma efekti
+  }
+
+  &:active {
+    transform: translateY(0px); // Tıklama anı efekti
+  }
+
+  // Sepet butonu için özel stil (opsiyonel)
+  &.cart-button {
+    background-color: #5a6268; // Farklı bir renk
+    &:hover {
+      background-color: #495057;
+    }
+  }
+}
+
+/* --- Hamburger Menü (Mobil) --- */
+.hamburger-menu {
+  display: none; // Başlangıçta gizli
+  cursor: pointer;
+  flex-direction: column;
+  gap: 5px; // Çizgiler arası boşluk
+  padding: 10px; // Tıklama alanını artırmak için
+  margin-right: 10px; // Sağdan boşluk
+
+  div {
+    width: 28px; // Çizgi genişliği
+    height: 3px; // Çizgi kalınlığı
+    background-color: #333; // Çizgi rengi
+    border-radius: 3px;
+    transition: all 0.3s ease-in-out; // Animasyon geçişi
+  }
+
+  // Menü açıkken ('X' ikonu animasyonu)
+  &.active {
+    div:nth-child(1) {
+      transform: translateY(8px) rotate(45deg);
+    }
+    div:nth-child(2) {
+      opacity: 0;
+    }
+    div:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
+    }
+  }
+}
+
+/* --- Modal (Giriş/Kayıt Formları) --- */
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #ffffff; // Açık modal arka planı
+  padding: 25px 30px; // İç boşluk
+  border-radius: 10px; // Köşe yuvarlaklığı
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2); // Daha belirgin gölge
+  z-index: 2000; // Diğer her şeyin üzerinde
+  width: 90%; // Genişlik
+  max-width: 380px; // Maksimum genişlik
+  color: #333; // Modal içi genel metin rengi
+
+  h3 {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 25px;
+    color: #a10a0a; // Başlık rengi (Koyu Kırmızı)
+    font-size: 1.6rem;
+    font-weight: 600;
+  }
+
+  // Form elemanları
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; // Form elemanları arası boşluk
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
+    display: block;
+    width: 100%;
+    padding: 12px 15px; // Input iç boşluğu
+    border: 1px solid #ccc; // Kenarlık
+    border-radius: 6px; // Köşe yuvarlaklığı
+    font-size: 1rem;
+    box-sizing: border-box; // Padding ve border genişliği etkilemesin
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    &:focus {
+        outline: none;
+        border-color: #a10a0a; // Odaklanınca kenarlık rengi
+        box-shadow: 0 0 0 0.15rem rgba(161, 10, 10, 0.2); // Odaklanınca hafif gölge
+    }
+
+    // Angular validasyon hatası durumu
+    &.ng-invalid.ng-touched {
+      border-color: #dc3545; // Hata kenarlık rengi (Bootstrap danger rengi)
+    }
+  }
+
+  // Alan bazlı hata mesajları
+  .error {
+    margin-top: -10px; // Input ile arasındaki boşluğu azalt
+    margin-bottom: 5px; // Sonraki elemanla arasında boşluk
+    small {
+      color: #dc3545; // Hata metin rengi
+      font-size: 0.8rem;
+    }
+  }
+
+  // === YENİ STİL: Genel Form Hata Mesajı ===
+  .form-error-message {
+    background-color: rgba(220, 53, 69, 0.1); // Hafif kırmızı arka plan
+    color: #a10a0a; // Koyu kırmızı yazı
+    border: 1px solid rgba(220, 53, 69, 0.3); // Hafif kırmızı kenarlık
+    padding: 10px 15px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    text-align: center;
+    font-weight: 500;
+  }
+  // =========================================
+
+  // Modal içindeki butonlar
+  button {
+    width: 100%;
+    padding: 12px 16px; // Buton iç boşluğu
+    margin-top: 10px; // Üstten boşluk (ilk buton hariç)
+    font-size: 1rem;
+    border-radius: 6px;
+    border: none;
+    background-color: #333; // Ana buton rengi
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    font-weight: 500;
+
+    &:hover:not(:disabled) { // Pasif değilken hover
+      background-color: #a10a0a; // Hover rengi
+      transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled) { // Pasif değilken tıklama
+       transform: translateY(0px);
+    }
+
+    // İptal butonu için farklı stil (opsiyonel)
+    &[type="button"] {
+      background-color: #6c757d; // Gri tonu
+      margin-top: 5px; // Gönder butonundan biraz ayır
+      &:hover:not(:disabled) {
+        background-color: #5a6268;
+      }
+    }
+
+    &:disabled { // Pasif buton stili
+      background-color: #ccc;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+  }
+}
+
+/* --- Mobil Görünüm --- */
+@media (max-width: 992px) { // Orta boy ekranlar için de mobil menü aktif olabilir
+  .hamburger-menu {
+    display: flex; // Hamburger menüyü göster
+  }
+
+  .navbar-content {
+    position: absolute; // Normal akıştan çıkar
+    top: 70px; // Navbar'ın hemen altına
+    left: -100%; // Başlangıçta ekranın solunda gizli
+    width: 100%;
+    height: calc(100vh - 70px); // Kalan yüksekliği kapla
+    background: rgba(51, 51, 51, 0.98); // Koyu yarı şeffaf arka plan
+    padding: 30px 0;
+    flex-direction: column; // Butonları alt alta diz
+    align-items: center;
+    gap: 18px; // Butonlar arası dikey boşluk
+    transition: left 0.4s ease-in-out; // Kayma animasyonu
+    transform: none; // Ortalamayı kaldır
+    display: flex; // Başlangıçta flex yapalım ki animasyon çalışsın
+
+    // Menü açıkken görünür yap
+    &.show {
+      left: 0; // Ekranın soluna getirerek görünür yap
+    }
+
+    // Mobil menüdeki butonlar
+    button {
+      width: 85%; // Daha geniş butonlar
+      max-width: 280px; // Maksimum genişlik
+      padding: 14px 20px; // Daha büyük iç boşluk
+      font-size: 1rem;
+      background-color: #495057; // Farklı arka plan
+      &:hover {
+         background-color: #a10a0a; // Hover rengi aynı kalabilir
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+    // Daha küçük ekranlar için ek ayar gerekirse buraya
+     .navbar-content {
+        gap: 15px; // Boşluğu biraz azalt
+     }
+     .modal {
+        width: 95%; // Modalı biraz daha genişlet
+        padding: 20px 25px;
+     }
+}
+

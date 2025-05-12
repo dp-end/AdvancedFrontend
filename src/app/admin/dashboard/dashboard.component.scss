@@ -1,0 +1,47 @@
+// Genel admin sayfası stilleri (diğer admin component'lerinde de kullanılabilir)
+.admin-page-container {
+  h1 {
+    color: #e9ecef;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #495057;
+    padding-bottom: 10px;
+  }
+  p {
+    color: #ced4da;
+    line-height: 1.6;
+  }
+  hr {
+     border-color: #495057;
+     margin: 25px 0;
+  }
+}
+
+// Dashboard özel stilleri
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); // Responsive grid
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.card {
+    background-color: #343a40;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #495057;
+    text-align: center;
+
+    h3 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+        color: #adb5bd;
+    }
+
+    .stat {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #f4a261; // Vurgu rengi
+        margin: 0;
+    }
+}

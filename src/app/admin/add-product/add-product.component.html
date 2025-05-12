@@ -1,0 +1,27 @@
+<h2>Yeni Ürün Ekle</h2>
+
+<form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label for="name">Ürün Adı:</label>
+    <input id="name" type="text" formControlName="name" required>
+    </div>
+
+  <div class="form-group">
+    <label for="price">Fiyat:</label>
+    <input id="price" type="number" formControlName="price" required min="0">
+     </div>
+
+   <div class="form-group">
+    <label for="imageUrl">Resim URL'si:</label>
+    <input id="imageUrl" type="text" formControlName="imageUrl">
+  </div>
+
+  <div class="form-group">
+    <label for="description">Açıklama:</label>
+    <textarea id="description" formControlName="description"></textarea>
+  </div>
+
+  <button type="submit" [disabled]="productForm.invalid || isSubmitting">
+    {{ isSubmitting ? 'Ekleniyor...' : 'Ürünü Ekle' }}
+  </button>
+</form>

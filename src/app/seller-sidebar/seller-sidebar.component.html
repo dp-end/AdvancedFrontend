@@ -1,0 +1,31 @@
+<nav class="seller-nav-sidebar">
+  <div class="sidebar-header">
+    <h3 class="panel-title">Satıcı Paneli</h3>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-item">
+      <a routerLink="products" routerLinkActive="active-link" class="nav-link" title="Ürünlerim">
+        <span class="material-icons-outlined"></span>
+        <span>Ürünlerim</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a routerLink="products/new" routerLinkActive="active-link" class="nav-link" title="Yeni Ürün Ekle">
+        <span class="material-icons-outlined"></span>
+        <span>Yeni Ürün Ekle</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a routerLink="orders" routerLinkActive="active-link" class="nav-link" title="Siparişlerim">
+        <span class="material-icons-outlined"></span>
+        <span>Siparişlerim</span>
+      </a>
+    </li>
+    <li class="nav-item separator"></li> <li class="nav-item">
+      <a (click)="logout()" class="nav-link logout-link" title="Çıkış Yap">
+        <span class="material-icons-outlined"></span>
+        <span>Çıkış Yap</span>
+      </a>
+    </li>
+  </ul>
+</nav>

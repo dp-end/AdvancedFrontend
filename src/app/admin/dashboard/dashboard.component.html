@@ -1,0 +1,38 @@
+<div class="admin-page-container">
+  <h1>Gösterge Paneli</h1>
+
+  <div *ngIf="isLoading" class="loading-state">
+    İstatistikler yükleniyor...
+  </div>
+
+  <div *ngIf="error && !isLoading" class="error-state">
+    <p class="error-message">{{ error }}</p>
+    <button (click)="loadStats()" class="btn-retry">Tekrar Dene</button>
+  </div>
+
+  <ng-container *ngIf="!isLoading && !error && stats">
+    <p>Admin paneline hoş geldiniz! Güncel istatistikler aşağıdadır.</p>
+    <hr>
+
+    <div class="dashboard-cards">
+        <div class="card">
+            <h3>Toplam Ürün</h3>
+            <p class="stat">{{ stats.totalProducts ?? 'N/A' }}</p>
+        </div>
+        <div class="card">
+            <h3>Bekleyen Sipariş</h3>
+            <p class="stat">{{ stats.pendingOrders ?? 'N/A' }}</p>
+        </div>
+        <div class="card">
+            <h3>Toplam Kullanıcı</h3>
+            <p class="stat">{{ stats.totalUsers ?? 'N/A' }}</p>
+        </div>
+        </div>
+
+    </ng-container>
+
+   <div *ngIf="!isLoading && !error && !stats" class="no-data">
+       <p>Gösterge paneli verileri alınamadı.</p>
+   </div>
+
+</div>

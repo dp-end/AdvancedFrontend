@@ -1,0 +1,149 @@
+<div class="checkout-container container my-4">
+  <h2 class="mb-4 text-center">Ödeme Sayfası</h2>
+
+  <div class="checkout-layout row" *ngIf="(cartItems$ | async) as items; else emptyCart">
+    <div class="col-lg-7 checkout-form-section mb-4 mb-lg-0">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h3 class="card-title mb-4">Teslimat Adresi</h3>
+          <form [formGroup]="addressForm" id="address-form" class="needs-validation" novalidate>
+            <div class="row">
+              <div class="col-md-12 mb-3">
+                <label for="fullName" class="form-label">Ad Soyad <span class="text-danger">*</span></label>
+                <input id="fullName" type="text" class="form-control" formControlName="fullName" placeholder="Teslim alacak kişinin adı"
+                       [ngClass]="{ 'is-invalid': fullName?.invalid && (fullName?.dirty || fullName?.touched) }">
+                <div *ngIf="fullName?.invalid && (fullName?.dirty || fullName?.touched)" class="invalid-feedback">
+                  Ad Soyad alanı zorunludur.
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="addressLine1" class="form-label">Adres Satırı <span class="text-danger">*</span></label>
+              <input id="addressLine1" type="text" class="form-control" formControlName="addressLine1" placeholder="Mahalle, cadde, sokak, no"
+                     [ngClass]="{ 'is-invalid': addressLine1?.invalid && (addressLine1?.dirty || addressLine1?.touched) }">
+              <div *ngIf="addressLine1?.invalid && (addressLine1?.dirty || addressLine1?.touched)" class="invalid-feedback">
+                Adres alanı zorunludur.
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="city" class="form-label">Şehir <span class="text-danger">*</span></label>
+                <input id="city" type="text" class="form-control" formControlName="city" placeholder="İl / İlçe"
+                       [ngClass]="{ 'is-invalid': city?.invalid && (city?.dirty || city?.touched) }">
+                <div *ngIf="city?.invalid && (city?.dirty || city?.touched)" class="invalid-feedback">
+                  Şehir alanı zorunludur.
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="postalCode" class="form-label">Posta Kodu <span class="text-danger">*</span></label>
+                <input id="postalCode" type="text" class="form-control" formControlName="postalCode" placeholder="örn: 07000"
+                       [ngClass]="{ 'is-invalid': postalCode?.invalid && (postalCode?.dirty || postalCode?.touched) }">
+                <div *ngIf="postalCode?.invalid && (postalCode?.dirty || postalCode?.touched)" class="invalid-feedback">
+                  <span *ngIf="postalCode?.errors?.['required']">Posta kodu zorunludur.</span>
+                  <span *ngIf="postalCode?.errors?.['pattern']">Geçerli bir posta kodu girin (5 hane).</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="country" class="form-label">Ülke</label>
+              <input id="country" type="text" class="form-control" formControlName="country">
+            </div>
+
+            <div class="mb-3">
+              <label for="phone" class="form-label">Telefon Numarası <span class="text-danger">*</span></label>
+              <input id="phone" type="tel" class="form-control" formControlName="phone" placeholder="örn: 5xxxxxxxxx"
+                     [ngClass]="{ 'is-invalid': phone?.invalid && (phone?.dirty || phone?.touched) }">
+              <div *ngIf="phone?.invalid && (phone?.dirty || phone?.touched)" class="invalid-feedback">
+                <span *ngIf="phone?.errors?.['required']">Telefon numarası zorunludur.</span>
+                <span *ngIf="phone?.errors?.['pattern']">Geçerli bir telefon numarası girin.</span>
+              </div>
+            </div>
+          </form>
+
+          <hr class="my-4">
+
+          <h3 class="mb-3">Ödeme Yöntemi</h3>
+          <div class="payment-methods">
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="radio" name="paymentMethod" id="stripePayment" value="stripe"
+                     [(ngModel)]="selectedPaymentMethod" (change)="onPaymentMethodChange()">
+              <label class="form-check-label" for="stripePayment">
+                Kredi Kartı / Banka Kartı (Stripe)
+              </label>
+              <div *ngIf="selectedPaymentMethod === 'stripe'" class="stripe-element-container mt-2 p-3 border rounded">
+                <div #stripeCardElement class="StripeElement">
+                  </div>
+                <div *ngIf="paymentError" class="stripe-error-message text-danger mt-2">
+                  <small>{{ paymentError }}</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="paymentMethod" id="paypalPayment" value="paypal"
+                     [(ngModel)]="selectedPaymentMethod" (change)="onPaymentMethodChange()" disabled> <label class="form-check-label" for="paypalPayment">
+                PayPal <span class="text-muted">(Yakında)</span>
+              </label>
+              <div *ngIf="selectedPaymentMethod === 'paypal'" class="payment-form-placeholder mt-2">
+                <p class="text-muted fst-italic small">(PayPal entegrasyonu henüz aktif değildir)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-5 checkout-summary-section">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h3 class="card-title mb-4">Sipariş Özeti</h3>
+          <ul class="list-group list-group-flush summary-item-list" *ngIf="items && items.length > 0">
+            <li *ngFor="let item of items" class="list-group-item d-flex justify-content-between align-items-center summary-item">
+              <div class="me-auto">
+                <span class="summary-item-name fw-bold">{{ item.name }}</span>
+                <small class="d-block text-muted">Adet: {{ item.quantity }}</small>
+              </div>
+              <span class="summary-item-price">
+                {{ (item.price ?? 0) * (item.quantity ?? 0) | currency:'TRY':'symbol':'1.2-2' }}
+              </span>
+            </li>
+          </ul>
+
+          <hr class="my-3">
+
+          <div class="total d-flex justify-content-between align-items-center h4">
+            <strong>Genel Toplam:</strong>
+            <strong>{{ totalPrice | currency:'TRY':'symbol':'1.2-2' }}</strong>
+          </div>
+
+          <button
+            type="button"
+            (click)="startCheckoutProcess()"
+            [disabled]="addressForm.invalid || !selectedPaymentMethod || isSubmitting || isPaymentProcessing"
+            class="btn btn-primary btn-lg w-100 mt-4 place-order-button">
+            <span *ngIf="isPaymentProcessing || isSubmitting" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            <span *ngIf="isPaymentProcessing">Ödeme İşleniyor...</span>
+            <span *ngIf="!isPaymentProcessing && isSubmitting && selectedPaymentMethod !== 'stripe'">Sipariş Oluşturuluyor...</span>
+            <span *ngIf="!isPaymentProcessing && !isSubmitting && selectedPaymentMethod === 'stripe'">Güvenli Ödeme Yap</span>
+            <span *ngIf="!isPaymentProcessing && !isSubmitting && selectedPaymentMethod === 'paypal'">PayPal ile Öde (Yakında)</span>
+            <span *ngIf="!isPaymentProcessing && !isSubmitting && !selectedPaymentMethod">Siparişi Tamamla</span>
+          </button>
+
+          <div *ngIf="isPaymentProcessing || isSubmitting" class="spinner-overlay text-center mt-3">
+            <small class="text-muted">Lütfen bekleyin...</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #emptyCart>
+    <div class="text-center py-5">
+      <p class="lead">Sepetiniz boş.</p>
+      <a routerLink="/urunler" class="btn btn-lg btn-outline-primary">Alışverişe Devam Et</a>
+    </div>
+  </ng-template>
+</div>

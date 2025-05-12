@@ -1,0 +1,75 @@
+<div class="cart-overlay" *ngIf="isVisible">
+  <div class="cart-container">
+    <button (click)="closeCart()" class="close-button" aria-label="Sepeti Kapat">X</button>
+
+    <h2>Sepetiniz</h2>
+
+    <div *ngIf="!cartItems || cartItems.length === 0; else itemsList" class="empty-cart-message">
+      <p>Sepetiniz şu an boş.</p>
+      <p><a routerLink="/urunler" (click)="closeCart()">Alışverişe başlayın!</a></p>
+    </div>
+
+    <ng-template #itemsList>
+      <div *ngFor="let item of cartItems; trackBy: trackByItemId" class="cart-item">
+        <div class="item-details">
+          <img
+            *ngIf="item.imageUrl"
+            [src]="item.imageUrl"
+            [alt]="item.name"
+            class="item-image"
+            onError="this.src='assets/images/default-product.png'; this.alt='Resim yüklenemedi'"
+            (click)="item.id != null && navigateToProduct(item.id)" style="cursor: pointer;"
+          >
+          <img
+            *ngIf="!item.imageUrl"
+            src="assets/images/default-product.png"
+            [alt]="item.name"
+            class="item-image"
+            (click)="item.id != null && navigateToProduct(item.id)" style="cursor: pointer;"
+          >
+
+          <div class="item-info">
+            <h4 class="item-name" (click)="item.id != null && navigateToProduct(item.id)" style="cursor: pointer;">{{ item.name }}</h4> <p class="item-price">Birim Fiyat: {{ item.price | currency:'TRY':'symbol':'1.2-2' }}</p>
+            <div class="item-quantity">
+              <label [for]="'quantity-' + item.id" class="quantity-label">Adet:</label>
+              <input
+                type="number"
+                [id]="'quantity-' + item.id"
+                class="quantity-input"
+                [value]="item.quantity"
+                (change)="item.id != null && updateItemQuantity(item.id, $event)"
+                min="1"
+                [attr.aria-label]="item.name + ' için adet'"
+              >
+            </div>
+          </div>
+        </div>
+        <div class="item-actions">
+          <p class="item-total-price">Ara Toplam: {{ (item.price ?? 0) * (item.quantity ?? 0) | currency:'TRY':'symbol':'1.2-2' }}</p>
+          <button
+            (click)="item.id != null && removeFromCart(item.id)"
+            class="remove-button"
+            title="Ürünü Sepetten Kaldır"
+            [attr.aria-label]="item.name + ' ürününü sepetten kaldır'"
+          >
+            <span class="material-icons-outlined" style="font-size: 1.1rem;">delete_outline</span> Sil
+          </button>
+        </div>
+      </div>
+
+      <div class="cart-summary" *ngIf="cartItems.length > 0">
+        <hr>
+        <p class="total-price">
+          <strong>Genel Toplam: {{ getTotalPrice() | currency:'TRY':'symbol':'1.2-2' }}</strong>
+        </p>
+        <button (click)="navigateToCheckout()" class="btn btn-primary btn-checkout w-100">
+          Ödemeye Geç <span class="material-icons-outlined" style="font-size: 1.1rem; vertical-align: middle;">arrow_forward</span>
+        </button>
+        <button (click)="clearCart()" class="btn btn-outline-danger btn-clear-cart w-100 mt-2">
+          Sepeti Temizle
+        </button>
+      </div>
+    </ng-template>
+
+  </div>
+</div>

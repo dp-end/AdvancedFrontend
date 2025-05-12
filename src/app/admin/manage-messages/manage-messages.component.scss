@@ -1,0 +1,104 @@
+// Ortak admin sayfası stillerini import et (eğer varsa)
+// @import '../admin-page.scss';
+// @import '../admin-table.scss'; // Ortak tablo stilleri
+
+// Bu componente özel stiller
+
+.messages-table {
+  // Tabloya özel ek stiller gerekirse buraya
+  td a[href^="mailto:"] { // Email linklerini stilize et
+    color: #f4a261; // Vurgu rengi
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+      color: #e76f51;
+    }
+  }
+
+  tr.unread td { // Okunmamış mesajları vurgula
+    font-weight: 600; // Kalın yap
+    // Veya farklı bir arka plan rengi verilebilir
+    // background-color: rgba(244, 162, 97, 0.1);
+  }
+}
+
+// Mesaj Detay Modalı Stilleri
+.message-detail-modal-overlay {
+  position: fixed;
+  inset: 0; // top, right, bottom, left = 0
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1100;
+  padding: 20px;
+}
+
+.message-detail-modal-content {
+  background-color: #343a40; // Koyu modal arka planı
+  color: #f8f9fa;
+  padding: 30px;
+  border-radius: 8px;
+  border: 1px solid #495057;
+  max-width: 600px;
+  width: 100%;
+  position: relative;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  max-height: 80vh;
+  overflow-y: auto;
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #e9ecef;
+    border-bottom: 1px solid #495057;
+    padding-bottom: 10px;
+  }
+
+  p {
+    margin-bottom: 10px;
+    line-height: 1.6;
+    color: #ced4da;
+    strong {
+      color: #f8f9fa;
+    }
+  }
+
+  hr {
+    border-color: #495057;
+    margin: 20px 0;
+  }
+
+  // Mesaj içeriğini göstermek için pre tag'i
+  .message-body {
+    white-space: pre-wrap; // Satır sonlarını ve boşlukları koru
+    word-wrap: break-word; // Uzun kelimeleri kır
+    background-color: #495057; // Hafif farklı arka plan
+    padding: 15px;
+    border-radius: 4px;
+    max-height: 300px; // Çok uzun mesajlar için kaydırma
+    overflow-y: auto;
+    font-family: monospace; // Okunabilirlik için farklı font
+    font-size: 0.95rem;
+  }
+
+  .close-modal-btn { // Kapatma butonu stili (order-history'den alınabilir)
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #adb5bd;
+    cursor: pointer;
+    line-height: 1;
+    &:hover { color: #f8f9fa; }
+  }
+
+  // Modal içindeki Sil butonu
+  .btn-delete { // Ortak admin tablo stilinden alabilir veya burada tanımlanabilir
+     margin-top: 20px;
+     // ... (stil tanımları) ...
+  }
+}

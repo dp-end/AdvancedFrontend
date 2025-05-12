@@ -1,0 +1,72 @@
+<div id="services" class="section products-section">
+  <div class="page-layout">
+    <aside class="sidebar">
+      <h4>Kategoriler</h4>
+      <ul class="filter-list">
+        <li
+          *ngFor="let categoryName of categoriesForFilter"
+          (click)="onCategoryChange(categoryName === 'Tüm Kategoriler' ? 'Tüm Kategoriler' : categoryName)"
+          [class.active-filter]="selectedCategory === categoryName">
+          {{ categoryName }}
+        </li>
+      </ul>
+
+      <h4>Ürün Çeşitleri</h4>
+      <ul class="filter-list">
+        <li
+          *ngFor="let typeName of typesForFilter"
+          (click)="onTypeChange(typeName === 'Tüm Çeşitler' ? 'Tüm Çeşitler' : typeName)"
+          [class.active-filter]="selectedType === typeName">
+          {{ typeName }}
+        </li>
+      </ul>
+    </aside>
+
+    <main class="product-display-area">
+      <div class="search-container">
+        <input
+          type="text"
+          placeholder="Ürün ara..."
+          [(ngModel)]="searchText"
+          (input)="onSearchChange()" class="search-input"
+        />
+      </div>
+
+      <div *ngIf="isLoading" class="loading-indicator">
+        <p>Ürünler yükleniyor...</p>
+      </div>
+
+      <div *ngIf="!isLoading && errorMessage" class="error-message alert alert-danger">
+        {{ errorMessage }}
+      </div>
+
+      <div class="product-grid">
+        <div *ngFor="let product of filteredProducts; trackBy: trackByProductId" class="product-card">
+          <img
+            [src]="product.imageUrl || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'"
+            [alt]="product.name || 'Ürün Resmi'"
+            class="product-image"
+            (error)="handleImageError($event)" />
+          <div class="product-details">
+            <h3 class="product-name" title="{{ product.name }}">{{ product.name }}</h3>
+            <p class="product-description" title="{{ product.description }}">
+              {{ product.description | slice:0:60 }}{{ (product.description?.length || 0) > 60 ? '...' : '' }}
+            </p>
+            <p class="product-price">{{ product.price | currency:'TRY':'symbol':'1.2-2' }}</p>
+            <div class="product-actions">
+              <button [routerLink]="['/urun', product.id]" class="btn btn-sm btn-outline-secondary me-2 btn-detail">Detay</button>
+              <button (click)="addToCart(product)" class="btn btn-sm btn-primary btn-add-cart">Sepete Ekle</button>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!isLoading && !errorMessage && filteredProducts.length === 0 && allProducts.length > 0" class="no-products alert alert-warning w-100 text-center">
+          Aradığınız kriterlere uygun aktif ürün bulunamadı.
+        </div>
+        <div *ngIf="!isLoading && !errorMessage && allProducts.length === 0" class="no-products alert alert-info w-100 text-center">
+          Gösterilecek ürün bulunmamaktadır.
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

@@ -1,0 +1,66 @@
+<div class="order-history-container">
+  <h2>Sipariş Geçmişim</h2>
+
+  <div *ngIf="isLoading" class="loading-state">
+    <p>Siparişler yükleniyor...</p>
+  </div>
+
+  <div *ngIf="error && !isLoading" class="error-state">
+    <p class="error-message">{{ error }}</p>
+    <button (click)="loadOrders()" class="btn-retry">Tekrar Dene</button>
+  </div>
+
+  <ng-container *ngIf="!isLoading && !error">
+    <ng-container *ngIf="(orders$ | async) as orders">
+      <div *ngIf="orders.length > 0; else noOrders" class="orders-table-container">
+        <table class="order-table">
+          <thead>
+            <tr>
+              <th>Sipariş No</th>
+              <th>Tarih</th>
+              <th>Tutar</th>
+              <th>Durum</th>
+              <th>Detaylar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let order of orders">
+              <td>#{{ order.id }}</td>
+              <td>{{ order.orderDate | date:'dd.MM.yyyy HH:mm' }}</td>
+              <td>{{ order.totalAmount | currency:'TRY':'symbol':'1.2-2' }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="getStatusClass(order.status)">
+                  {{ order.status || 'Bilinmiyor' }}
+                </span>
+                <span *ngIf="order.refundStatus"
+                      class="refund-status"
+                      [ngClass]="formatRefundClass(order.refundStatus)">
+                  ({{ order.refundStatus }})
+                </span>
+                <span *ngIf="order.cancellationReason && order.status === 'İptal Edildi'"
+                      title="İptal Nedeni: {{ order.cancellationReason }}"
+                      style="cursor: help; margin-left: 5px; color: #adb5bd;">
+                  ℹ️
+                </span>
+              </td>
+              <td>
+                <button [disabled]="order.status === 'İptal Edildi'"
+                        [routerLink]="['/siparis-detay', order.id]"
+                        class="btn-detail-small"
+                        [title]="order.status === 'İptal Edildi' ? 'İptal edilen sipariş detayı görüntülenemez' : 'Sipariş detayını görüntüle'">
+                  Görüntüle
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <ng-template #noOrders>
+        <div class="no-orders-message">
+          <p>Henüz kayıtlı bir siparişiniz bulunmamaktadır.</p>
+          <button [routerLink]="['/urunler']">Hemen Alışverişe Başlayın!</button>
+        </div>
+      </ng-template>
+    </ng-container>
+  </ng-container>
+</div>

@@ -1,0 +1,52 @@
+<div class="admin-page-container">
+  <h1>Ürünleri Yönet</h1>
+
+  <div class="page-actions">
+    <a routerLink="/admin/products/add" class="btn btn-success">Yeni Ürün Ekle</a>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-state">Ürünler yükleniyor...</div>
+  <div *ngIf="error" class="error-state">{{ error }} <button (click)="loadProducts()" class="btn-retry">Tekrar Dene</button></div>
+
+  <ng-container *ngIf="!isLoading && !error">
+    <div *ngIf="(products$ | async) as products" class="admin-table-container">
+      <table *ngIf="products.length > 0; else noProducts" class="admin-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Resim</th>
+            <th>Adı</th>
+            <th>Kategori</th>
+            <th>Fiyat</th>
+            <th>Stok</th>
+            <th>Durum</th>
+            <th>Aksiyonlar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let product of products">
+            <td>{{ product.id }}</td>
+            <td><img [src]="product.imageUrl || 'assets/default-product.png'" alt="{{ product.name }}" class="table-product-image"></td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.category || '-' }}</td>
+            <td>{{ product.price | currency:'TRY':'symbol':'1.2-2' }}</td>
+            <td>{{ product.stockQuantity }}</td>
+            <td>
+              <span class="status-badge" [class.status-active]="product.active" [class.status-inactive]="!product.active">
+                {{ product.active ? 'Aktif' : 'Pasif' }}
+              </span>
+            </td>
+            <td class="action-buttons">
+              <a [routerLink]="['/admin/products/edit', product.id]" class="btn-edit">Düzenle</a>
+              <button (click)="deleteProduct(product.id)" class="btn-delete">
+                {{ product.active ? 'Pasif Yap' : 'Sil' }} </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <ng-template #noProducts>
+        <p style="text-align: center; padding: 20px;">Gösterilecek ürün bulunamadı.</p>
+      </ng-template>
+    </div>
+  </ng-container>
+</div>

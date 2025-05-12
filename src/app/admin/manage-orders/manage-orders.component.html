@@ -1,0 +1,85 @@
+<div class="admin-page-container">
+  <h1>Siparişleri Yönet</h1>
+
+  <div *ngIf="isLoading" class="loading-state">
+    <p>🔄 Siparişler yükleniyor...</p>
+  </div>
+
+  <div *ngIf="error" class="error-state">
+    <p>⚠ {{ error }}</p>
+    <button (click)="loadOrders()" class="btn-retry">🔁 Tekrar Dene</button>
+  </div>
+
+  <ng-container *ngIf="!isLoading && !error">
+    <ng-container *ngIf="(orders$ | async) as orders">
+      <div *ngIf="orders.length > 0; else noOrders" class="admin-table-container">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Müşteri Email</th>
+              <th>Tarih</th>
+              <th>Tutar</th>
+              <th>Durum</th>
+              <th>Aksiyonlar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let order of orders">
+              <td>#{{ order.id }}</td>
+              <td>{{ order.user?.email || 'N/A' }}</td>
+              <td>{{ order.orderDate | date: 'dd.MM.yyyy HH:mm' }}</td>
+              <td>{{ order.totalAmount | currency: 'TRY':'symbol':'1.2-2' }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="getStatusClass(order.status)">
+                  {{ order.status || 'Bilinmiyor' }}
+                </span>
+                <span *ngIf="order.refundStatus"
+                      class="refund-status"
+                      [ngClass]="formatRefundClass(order.refundStatus)">
+                  ({{ order.refundStatus }})
+                </span>
+              </td>
+              <td class="action-buttons">
+                <a [routerLink]="['/admin/orders/detail', order.id]"
+                   class="btn-view"
+                   title="Sipariş Detayını Gör">
+                  📄 Detay
+                </a>
+
+                <select (change)="updateOrderStatus(order.id, $event)"
+                        [disabled]="order.status === 'İptal Edildi' || order.status === 'Teslim Edildi'"
+                        class="status-select"
+                        title="Sipariş Durumunu Güncelle">
+                  <option value="PROCESSING"
+                          [selected]="['Hazırlanıyor', 'PROCESSING', 'PENDING'].includes(order.status)">
+                    Hazırlanıyor
+                  </option>
+                  <option value="SHIPPED"
+                          [selected]="['Kargoda', 'SHIPPED'].includes(order.status)">
+                    Kargoda
+                  </option>
+                  <option value="DELIVERED"
+                          [selected]="['Teslim Edildi', 'DELIVERED'].includes(order.status)">
+                    Teslim Edildi
+                  </option>
+                </select>
+
+                <button (click)="cancelOrder(order.id)"
+                        class="btn-delete"
+                        [disabled]="order.status === 'İptal Edildi' || order.status === 'Teslim Edildi'"
+                        title="Siparişi İptal Et">
+                  ❌ İptal Et
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ng-template #noOrders>
+        <p class="empty-state">🚫 Gösterilecek sipariş bulunamadı.</p>
+      </ng-template>
+    </ng-container>
+  </ng-container>
+</div>

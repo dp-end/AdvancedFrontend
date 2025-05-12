@@ -1,0 +1,265 @@
+// Ana checkout konteyneri
+.checkout-container {
+  padding: 40px 20px;
+  background-color: #1a1a1a; // Koyu ana arka plan
+  color: #f8f9fa;           // Genel açık metin rengi
+  min-height: calc(100vh - 70px); // Opsiyonel
+
+  h2 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 2.5rem;
+    color: #e9ecef;
+    font-weight: 600;
+  }
+}
+
+// Ana layout (form ve özet yan yana)
+.checkout-layout {
+  display: flex;
+  flex-wrap: wrap; // Küçük ekranlar için sarmayı etkinleştir
+  gap: 40px;      // İki sütun arası boşluk
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+// Sol sütun: Form alanı
+.checkout-form {
+  flex: 2; // Özet alanından daha fazla yer kapla (örn: 2/3 oran)
+  min-width: 300px; // Minimum genişlik
+
+  h3 {
+    font-size: 1.5rem;
+    color: #ced4da;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #495057; // Başlık altı çizgi
+  }
+}
+
+// Form grupları ve elemanları
+.form-group {
+  margin-bottom: 20px;
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #adb5bd; // Etiket rengi
+    font-size: 0.9rem;
+  }
+
+  input[type="text"],
+  input[type="tel"],
+  input[type="email"],
+  textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #495057; // Koyu kenarlık
+    border-radius: 6px;
+    background-color: #343a40; // Koyu input arkaplanı
+    color: #f8f9fa;           // Açık yazı rengi
+    font-size: 1rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    // Angular validasyon sınıfları ile hata durumu
+    &.ng-invalid.ng-touched {
+      border-color: #dc3545; // Hata rengi (kırmızı tonu)
+    }
+
+    &:focus {
+      outline: none;
+      border-color: #f4a261; // Odak rengi (sarı)
+      background-color: #495057;
+      box-shadow: 0 0 0 0.2rem rgba(244, 162, 97, 0.25);
+    }
+
+    &::placeholder {
+      color: #6c757d; // Soluk placeholder
+    }
+
+    &:disabled { // Devre dışı input (örn: Ülke)
+       background-color: #495057;
+       opacity: 0.7;
+       cursor: not-allowed;
+    }
+  }
+
+  textarea {
+    min-height: 80px;
+    resize: vertical;
+  }
+
+  // Hata mesajları
+  .error-message {
+    display: block;
+    margin-top: 5px;
+    color: #f8d7da; // Açık kırmızı/pembe hata yazısı
+    font-size: 0.85rem;
+  }
+}
+
+// Ödeme yöntemleri alanı
+.payment-methods {
+  margin-top: 30px;
+
+  .payment-option {
+    display: block;
+    background-color: #343a40;
+    padding: 15px;
+    border: 1px solid #495057;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+
+    input[type="radio"] {
+      margin-right: 10px;
+      accent-color: #f4a261; // Radio buton rengini sarı yap
+    }
+
+    &:has(input[type="radio"]:checked) { // Seçili olanı vurgula
+       border-color: #f4a261;
+    }
+
+    &:hover {
+       border-color: #6c757d;
+    }
+  }
+
+  // Ödeme formu placeholder alanı
+  .payment-form-placeholder {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    p {
+      font-style: italic;
+      color: #adb5bd;
+      margin: 0;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+// Sağ sütun: Sipariş özeti
+.checkout-summary {
+  flex: 1; // Kalan alanı doldur (örn: 1/3 oran)
+  min-width: 280px;
+  background-color: #343a40; // Form ile aynı veya farklı bir koyu ton
+  padding: 25px;
+  border-radius: 8px;
+  border: 1px solid #495057;
+  height: fit-content; // İçeriğe göre yükseklik
+  position: sticky;    // Sayfa kaydırılsa bile görünür kalsın (opsiyonel)
+  top: 90px;           // Navbar yüksekliği + boşluk kadar aşağıdan başla (sticky için)
+
+  h3 {
+    font-size: 1.5rem;
+    color: #ced4da;
+    margin-top: 0;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #495057;
+  }
+
+  // Özet listesi
+  .summary-item-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+  }
+
+  .summary-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    font-size: 0.95rem;
+    color: #ced4da;
+    border-bottom: 1px dashed #495057; // Kesikli çizgi
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .summary-item-name {
+      flex-grow: 1;
+      margin-right: 10px;
+    }
+
+    .summary-item-price {
+      font-weight: 500;
+      white-space: nowrap; // Fiyatın alta kaymasını engelle
+    }
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid #495057;
+    margin: 20px 0;
+  }
+
+  // Toplam fiyat alanı
+  .total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #f8f9fa;
+    margin-bottom: 25px;
+  }
+
+  // Siparişi Tamamla Butonu
+  .place-order-button {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #1a1a1a; // Koyu metin
+    background-color: #f4a261; // Sarı vurgu rengi
+    border: 1px solid #f4a261;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+
+    &:hover:not(:disabled) {
+      background-color: #e76f51;
+      border-color: #e76f51;
+      color: #000000;
+    }
+
+    &:disabled {
+      background-color: #6c757d;
+      border-color: #6c757d;
+      color: #adb5bd;
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
+
+/* --- Responsive Ayarlar --- */
+@media (max-width: 992px) {
+  .checkout-layout {
+     gap: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .checkout-layout {
+    flex-direction: column; // Sütunları alt alta diz
+  }
+  .checkout-summary {
+     position: static; // Sticky özelliğini kaldır
+     margin-top: 30px;
+  }
+}
+
+@media (max-width: 576px) {
+   .checkout-container h2 {
+      font-size: 2rem; // Başlığı küçült
+   }
+   .checkout-form h3, .checkout-summary h3 {
+      font-size: 1.3rem; // Alt başlıkları küçült
+   }
+}

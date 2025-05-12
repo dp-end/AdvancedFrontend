@@ -1,0 +1,99 @@
+<div class="cart-page-container container my-4">
+  <h2 class="text-center mb-4">Alışveriş Sepetiniz</h2>
+
+  <ng-container *ngIf="(cartItems$ | async) as items; else emptyCartLoadingCheck">
+    <div *ngIf="items.length > 0; else emptyCartDisplay">
+      <div class="cart-items-list mb-4">
+        <div *ngFor="let item of items; trackBy: trackByItemId" class="cart-item card shadow-sm mb-3">
+          <div class="row g-0">
+            <div class="col-md-2 d-flex justify-content-center align-items-center p-2">
+              <img
+                [src]="item.imageUrl || 'assets/images/default-product.png'" [alt]="item.name || 'Ürün Resmi'"
+                class="cart-item-image img-fluid rounded"
+                onError="this.src='assets/images/default-product.png'; this.alt='Resim yüklenemedi'"
+                (click)="item.id != null && navigateToProduct(item.id)"
+                style="max-height: 120px; object-fit: contain; cursor: pointer;">
+            </div>
+            <div class="col-md-10">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                  <div>
+                    <h5 class="card-title item-name mb-1" (click)="item.id != null && navigateToProduct(item.id)" style="cursor: pointer;">
+                      {{ item.name }}
+                    </h5>
+                    <p class="card-text item-price text-muted mb-2">
+                      Birim Fiyat: {{ item.price | currency:'TRY':'symbol':'1.2-2' }}
+                    </p>
+                  </div>
+                  <button
+                    (click)="item.id != null && removeFromCart(item.id)"
+                    class="btn btn-sm btn-outline-danger remove-button ms-2"
+                    title="Ürünü Kaldır"
+                    [attr.aria-label]="item.name + ' ürününü sepetten kaldır'">
+                    <span class="material-icons-outlined" style="font-size: 1.1rem;">delete_outline</span>
+                  </button>
+                </div>
+
+                <div class="d-flex align-items-center justify-content-between">
+                  <div class="cart-item-quantity">
+                    <label [for]="'quantity-page-' + item.id" class="form-label me-2 small">Adet:</label>
+                    <input
+                      type="number"
+                      [id]="'quantity-page-' + item.id"
+                      class="form-control form-control-sm quantity-input"
+                      style="width: 70px;"
+                      [value]="item.quantity"
+                      (change)="item.id != null && updateItemQuantity(item.id, $event)"
+                      min="1"
+                      [attr.aria-label]="item.name + ' için adet'">
+                  </div>
+                  <div class="cart-item-total fw-bold">
+                    Ara Toplam: {{ (item.price ?? 0) * (item.quantity ?? 0) | currency:'TRY':'symbol':'1.2-2' }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cart-summary card shadow-sm">
+        <div class="card-body">
+          <h3 class="card-title text-center mb-3">Sipariş Özeti</h3>
+          <div class="d-flex justify-content-between h5 mb-3">
+            <span>Genel Toplam:</span>
+            <span class="fw-bold">{{ getTotalPrice() | currency:'TRY':'symbol':'1.2-2' }}</span>
+          </div>
+          <button (click)="proceedToCheckout()" class="btn btn-primary btn-lg w-100 checkout-button d-flex align-items-center justify-content-center">
+            Ödemeye Geç <span class="material-icons-outlined ms-2" style="font-size: 1.2rem;">payment</span>
+          </button>
+           <button (click)="clearCart()" class="btn btn-outline-danger w-100 mt-2">
+            Sepeti Temizle
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </ng-container>
+
+  <ng-template #emptyCartLoadingCheck>
+    <div *ngIf="isLoading" class="text-center py-5"> <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Yükleniyor...</span>
+        </div>
+        <p class="mt-2 text-muted">Sepetiniz yükleniyor...</p>
+    </div>
+    <ng-container *ngIf="!isLoading">
+        <ng-container *ngTemplateOutlet="emptyCartDisplay"></ng-container>
+    </ng-container>
+  </ng-template>
+
+  <ng-template #emptyCartDisplay>
+    <div class="text-center py-5 empty-cart-display">
+      <span class="material-icons-outlined display-1 text-muted" style="font-size: 4rem;">shopping_cart_off</span>
+      <p class="lead mt-3">Sepetiniz boş.</p>
+      <button [routerLink]="['/urunler']" class="btn btn-lg btn-outline-primary mt-2">
+        Alışverişe Başla <span class="material-icons-outlined" style="font-size: 1.2rem; vertical-align: middle;">arrow_forward</span>
+      </button>
+    </div>
+  </ng-template>
+</div>

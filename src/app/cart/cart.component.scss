@@ -1,0 +1,48 @@
+/* Sepet overlay (katman) */
+.cart-overlay {
+  position: fixed; /* Sabit pozisyon, sayfa kaydırıldığında yerinde kalır */
+  top: 0; /* Sayfanın üst kısmına sabitler */
+  left: 0; /* Sayfanın sol kısmına sabitler */
+  width: 100%; /* Ekranın tamamını kaplar */
+  height: 100%; /* Ekranın tamamını kaplar */
+  background: rgba(0, 0, 0, 0.7); /* Arka planı yarı şeffaf siyah yapar (dark overlay efekti) */
+  display: flex; /* Flexbox ile içerik hizalama */
+  justify-content: center; /* İçeriği yatayda ortalar */
+  align-items: center; /* İçeriği dikeyde ortalar */
+  z-index: 1000; /* Diğer öğelerin üstünde görünmesini sağlar */
+
+  /* .hidden sınıfı eklenince bu katman gizlenir */
+  &.hidden {
+    display: none; /* Gizlenmesini sağlar */
+  }
+}
+
+/* Sepet içeriği (container) */
+.cart-container {
+  background-color: white; /* Arka planı beyaz yapar */
+  padding: 20px; /* İçerik etrafında 20px boşluk bırakır */
+  border-radius: 5px; /* Köşeleri yuvarlatır */
+  width: 300px; /* Sabit genişlikte ayarlama */
+  text-align: center; /* Metni ortalar */
+}
+
+/* Kapatma butonu */
+.close-button {
+  background: red; /* Kapatma butonunun arka planını kırmızı yapar */
+  color: white; /* Yazı rengini beyaz yapar */
+  border: none; /* Kenarlık yok */
+  padding: 5px 10px; /* Buton içindeki boşluk */
+  border-radius: 50%; /* Butonu yuvarlak yapar */
+  cursor: pointer; /* Fare üzerine gelince işaretçi simgesini değiştirir */
+}
+
+/* Sepet öğesi */
+.cart-item {
+  margin-bottom: 10px; /* Her bir sepet öğesi arasına 10px boşluk bırakır */
+}
+
+/* Toplam fiyat kısmı */
+.total-price {
+  font-weight: bold; /* Fiyatı kalın yapar */
+  margin-top: 20px; /* Üstten 20px boşluk bırakır */
+}
